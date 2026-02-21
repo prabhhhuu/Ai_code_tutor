@@ -5,7 +5,7 @@ DATABASE_FILE = "ai_tutor.db"
 
 def get_db():
     """Get a connection to the SQLite database."""
-    conn = sqlite3.connect(DATABASE_FILE)
+    conn = sqlite3.connect(DATABASE_FILE, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     return conn
 
