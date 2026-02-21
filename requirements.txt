@@ -1,0 +1,6 @@
+flask
+gunicorn
+requests
+werkzeug
+huggingface-hub
+python-dotenv

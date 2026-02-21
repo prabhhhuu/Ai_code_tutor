@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - AI Code TutorS</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #020617;
+            --bg-tertiary: #1e293b;
+            --text-primary: #e5e7eb;
+            --text-secondary: #94a3b8;
+            --border-color: #1e293b;
+            --accent: #22c55e;
+            --accent-dark: #16a34a;
+        }
+
+        body.light-mode {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #f1f5f9;
+            --bg-tertiary: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: #cbd5e1;
+            --accent: #16a34a;
+            --accent-dark: #15803d;
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .navbar {
+            background: var(--bg-secondary);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 18px;
+            color: var(--text-primary);
+        }
+
+        .navbar-actions {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .navbar a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .navbar a:hover {
+            opacity: 0.8;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .page-title {
+            font-size: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .history-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 0 0 1px var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .history-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .history-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .history-meta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.python { background: #3572A5; color: white; }
+        .badge.javascript { background: #f7df1e; color: black; }
+        .badge.c { background: #555555; color: white; }
+        .badge.java { background: #b07219; color: white; }
+
+        .mode-badge {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .difficulty {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .difficulty.beginner { background: #16a34a; color: white; }
+        .difficulty.intermediate { background: #eab308; color: black; }
+        .difficulty.advanced { background: #dc2626; color: white; }
+
+        .timestamp {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .code-preview {
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 150px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            color: var(--text-secondary);
+        }
+
+
+        .history-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+        }
+
+        .delete-btn {
+            background: #dc2626;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .delete-btn:hover {
+            background: #b91c1c;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                margin: 15px auto;
+            }
+            
+            .history-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h2>🤖 AI Code TutorS</h2>
+        <div class="navbar-actions">
+            <button class="theme-toggle" id="themeToggle" title="Toggle Light/Dark Mode">🌙</button>
+            <a href="/editor">Editor</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="page-title">📋 Code History</h1>
+        
+        {% if history %}
+        <div class="history-list">
+            {% for item in history %}
+            <div class="history-card">
+                <div class="history-header">
+                    <div class="history-meta">
+                        <span class="badge {{ item.language }}">{{ item.language.upper() }}</span>
+                        <span class="mode-badge">{{ item.mode }}</span>
+                        <span class="difficulty {{ item.difficulty|lower }}">{{ item.difficulty }}</span>
+                        <span class="timestamp">{{ item.created_at }}</span>
+                    </div>
+                    <button class="delete-btn" data-id="{{ item.id }}">Delete</button>
+                </div>
+                
+                <div class="code-preview">{{ item.code[:500] }}{% if item.code|length > 500 %}...{% endif %}</div>
+                
+                <div class="history-actions">
+                    <a href="/editor?code={{ item.code|urlencode }}&language={{ item.language }}" class="btn btn-primary">Analyze Again</a>
+                    <button class="btn btn-secondary copy-btn">Copy Code</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>No History Yet</h3>
+            <p>You haven't analyzed any code yet. Start by analyzing some code!</p>
+            <a href="/editor" class="btn btn-primary">Go to Editor</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Theme Toggle
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-mode');
+                themeToggle.textContent = '☀️';
+            } else {
+                themeToggle.textContent = '🌙';
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            
+            if (body.classList.contains('light-mode')) {
+                body.classList.remove('light-mode');
+                localStorage.setItem('theme', 'dark');
+                themeToggle.textContent = '🌙';
+            } else {
+                body.classList.add('light-mode');
+                localStorage.setItem('theme', 'light');
+                themeToggle.textContent = '☀️';
+            }
+        }
+
+        // Event delegation for delete buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-btn')) {
+                var id = e.target.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this history item?')) {
+                    fetch('/history/delete/' + id, { method: 'POST' })
+                        .then(function() { window.location.reload(); });
+                }
+            }
+        });
+
+        // Event delegation for copy buttons
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('copy-btn')) {
+                var card = e.target.closest('.history-card');
+                var codePreview = card.querySelector('.code-preview');
+                if (codePreview) {
+                    navigator.clipboard.writeText(codePreview.textContent).then(function() {
+                        alert('Code copied to clipboard!');
+                    });
+                }
+            }
+        });
+
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+        initTheme();
+    </script>
+</body>
+</html>

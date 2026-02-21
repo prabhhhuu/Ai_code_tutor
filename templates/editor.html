@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Code TutorS</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<style>
+:root {
+    --bg-primary: #0f172a;
+    --bg-secondary: #020617;
+    --bg-tertiary: #1e293b;
+    --text-primary: #e5e7eb;
+    --text-secondary: #94a3b8;
+    --border-color: #1e293b;
+    --accent: #22c55e;
+    --accent-dark: #16a34a;
+}
+
+body.light-mode {
+    --bg-primary: #f8fafc;
+    --bg-secondary: #f1f5f9;
+    --bg-tertiary: #e2e8f0;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --border-color: #cbd5e1;
+    --accent: #16a34a;
+    --accent-dark: #15803d;
+}
+
+* {
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    margin: 0;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    overflow-y: scroll;
+}
+
+/* NAVBAR */
+.navbar {
+    background: var(--bg-secondary);
+    padding: 14px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.navbar h2 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--text-primary);
+}
+
+.navbar-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.navbar a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+}
+
+.navbar a:hover {
+    opacity: 0.8;
+}
+
+/* THEME TOGGLE */
+.theme-toggle {
+    background: none;
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 6px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* MAIN CONTAINER */
+.container {
+    max-width: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+}
+
+/* CARD */
+.card {
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 0 0 1px var(--border-color);
+    transition: all 0.3s ease;
+}
+
+/* TOP BAR */
+.top-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+select {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 10px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-width: 140px;
+    font-size: 14px;
+}
+
+select:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
+    transform: translateY(-2px);
+}
+
+select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+select option {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 8px;
+}
+
+select option:hover {
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+}
+
+select option:checked {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: white;
+}
+
+button {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border: none;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.3s ease, transform 0.15s ease;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+button:active {
+    transform: scale(0.96);
+}
+
+/* ANALYZE BUTTON */
+.analyze-btn {
+    padding: 8px 20px;
+    font-size: 14px;
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+    white-space: nowrap;
+}
+
+.analyze-btn:hover {
+    opacity: 0.95;
+    box-shadow: 0 6px 16px rgba(34, 197, 94, 0.4);
+    transform: translateY(-2px);
+}
+
+.analyze-btn:active {
+    transform: scale(0.98);
+}
+
+/* TEXTAREA */
+textarea {
+    width: 100%;
+    height: 260px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 14px;
+    color: var(--text-primary);
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    resize: vertical;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+}
+
+/* CHARACTER COUNTER */
+.char-counter {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #94a3b8;
+    gap: 12px;
+}
+
+.char-counter span {
+    transition: color 0.3s ease;
+}
+
+.char-counter.warning span {
+    color: #f59e0b;
+}
+
+/* OUTPUT */
+.output {
+    margin-top: 24px;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 0 0 1px var(--border-color);
+    transition: all 0.3s ease;
+    min-height: 100px;
+    animation: fadeSlide 0.5s ease-out forwards;
+}
+
+@keyframes fadeSlide {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.ai-output h3,
+.ai-output p,
+.ai-output li,
+.ai-output pre {
+    opacity: 0;
+    transform: translateY(6px);
+    animation: reveal 0.4s ease forwards;
+}
+
+.ai-output h3 { animation-delay: 0.05s; }
+.ai-output p { animation-delay: 0.1s; }
+.ai-output li { animation-delay: 0.12s; }
+.ai-output pre { animation-delay: 0.15s; }
+
+@keyframes reveal {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.output-header h3 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.copy-btn {
+    background: #2563eb;
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 5px;
+    transition: all 0.25s ease;
+}
+
+.copy-btn:hover {
+    background: #1d4ed8;
+}
+
+.copy-btn.copied {
+    background: #16a34a !important;
+    transform: scale(1.05);
+}
+
+pre {
+    white-space: pre-wrap;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    padding: 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.6;
+    max-height: 400px;
+    overflow-y: auto;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.code-copy-btn {
+    background: var(--accent);
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 5px;
+    transition: all 0.25s ease;
+}
+
+.code-copy-btn:hover {
+    background: var(--accent-dark);
+}
+
+.code-copy-btn.copied {
+    background: #16a34a !important;
+    transform: scale(1.05);
+}
+
+/* LOADING SPINNER */
+.spinner {
+    display: none;
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(34, 197, 94, 0.1);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin: 0 auto 12px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.spinner.active {
+    display: block;
+}
+
+.loading {
+    display: none;
+    margin-top: 12px;
+    font-weight: 500;
+    color: var(--accent);
+}
+
+.loading.active {
+    display: block;
+}
+
+/* TOOLTIPS */
+.tooltip-icon {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: rgba(34, 197, 94, 0.3);
+    color: var(--accent);
+    border-radius: 50%;
+    text-align: center;
+    line-height: 14px;
+    font-size: 10px;
+    cursor: help;
+    margin-left: 4px;
+    font-weight: bold;
+}
+
+.tooltip-icon:hover {
+    background: var(--accent);
+    color: white;
+}
+
+/* CLEAR & HELP BUTTONS */
+.clear-btn, .help-btn {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+
+.clear-btn:hover, .help-btn:hover {
+    background: var(--border-color);
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    color: var(--accent);
+    box-shadow: 0 4px 16px rgba(34, 197, 94, 0.2);
+}
+
+/* KEYBOARD SHORTCUTS MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 10000;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 28px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: var(--accent);
+}
+
+.shortcut-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.shortcut-item:last-child {
+    border-bottom: none;
+}
+
+.shortcut-key {
+    background: var(--bg-tertiary);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+}
+
+/* DIFFICULTY BADGES */
+.difficulty {
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.beginner {
+    background: #16a34a;
+    color: white;
+}
+
+.intermediate {
+    background: #eab308;
+    color: black;
+}
+
+.advanced {
+    background: #dc2626;
+    color: white;
+}
+
+/* MODE TOGGLE */
+.mode-toggle {
+    position: relative;
+    display: flex;
+    background: #020617;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    overflow: hidden;
+    min-width: 300px;
+}
+
+.mode-btn {
+    flex: 1;
+    padding: 8px 14px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    font-weight: 600;
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.3s ease;
+}
+
+.mode-btn.active {
+    color: #020617;
+}
+
+.mode-toggle .slider {
+    position: absolute;
+    height: 100%;
+    width: 25%;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    border-radius: 8px;
+    left: 0;
+    transition: transform 0.35s cubic-bezier(.4,0,.2,1);
+    z-index: 1;
+}
+
+.mode-btn:hover {
+    color: #22c55e;
+}
+
+/* TOAST NOTIFICATIONS */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.toast {
+    background: var(--bg-tertiary);
+    border-left: 5px solid #22c55e;
+    color: var(--text-primary);
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    animation: slideIn 0.4s ease forwards;
+    min-width: 320px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.toast.success {
+    border-left-color: #22c55e;
+    background: #0f4620;
+}
+
+.toast.error {
+    border-left-color: #ef4444;
+    background: #4a1111;
+}
+
+.toast.info {
+    border-left-color: #3b82f6;
+    background: #0d2d5e;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(400px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(400px);
+    }
+}
+
+.toast.remove {
+    animation: slideOut 0.3s ease forwards;
+}
+
+/* CODE BLOCK */
+.code-block {
+    background: #020617;
+    border: 1px solid #334155;
+    padding: 14px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 13px;
+    overflow-x: auto;
+    white-space: pre;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 1200px) {
+    .mode-toggle {
+        min-width: 250px;
+    }
+    
+    select {
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 900px) {
+    .top-bar {
+        gap: 8px;
+    }
+    
+    .mode-toggle {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    select {
+        flex: 0 1 120px;
+        min-width: 120px;
+    }
+    
+    .clear-btn, .help-btn, .analyze-btn {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    
+    .mode-toggle {
+        flex: 1 1 100%;
+        min-width: auto;
+    }
+    
+    select {
+        flex: 1;
+        min-width: 100px;
+    }
+    
+    .clear-btn, .help-btn, .analyze-btn {
+        flex: 1;
+        min-width: 80px;
+    }
+    
+    .container {
+        padding: 10px;
+        margin: 15px auto;
+    }
+    
+    textarea {
+        height: 180px;
+    }
+    
+    .navbar {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+    }
+    
+    .navbar-actions {
+        width: 100%;
+    }
+    
+    .modal-content {
+        width: 90vw;
+        max-width: none;
+    }
+}
+</style>
+
+<script>
+function typeText(element, speed = 12) {
+    const text = element.textContent;
+    element.textContent = "";
+    element.classList.add("typing");
+
+    let i = 0;
+    const timer = setInterval(() => {
+        element.textContent += text.charAt(i);
+        i++;
+        if (i >= text.length) {
+            clearInterval(timer);
+            element.classList.remove("typing");
+        }
+    }, speed);
+}
+
+window.addEventListener("load", () => {
+    const output = document.getElementById("ai-output");
+    if (!output) return;
+
+    // ONLY animate readable text (not code blocks)
+    const targets = output.querySelectorAll("p, li");
+
+    let delay = 0;
+    targets.forEach(el => {
+        const original = el.textContent;
+        if (!original.trim()) return;
+        
+        el.textContent = "";
+
+        setTimeout(() => {
+            el.textContent = original;
+            typeText(el, 10);
+        }, delay);
+
+        delay += 150;
+    });
+});
+
+</script>
+
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>🤖 AI Code TutorS</h2>
+    <div class="navbar-actions">
+        <button class="theme-toggle" id="themeToggle" title="Toggle Light/Dark Mode">🌙</button>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+<div class="card">
+<form method="POST" onsubmit="handleFormSubmit(event)">
+
+    <div class="top-bar">
+        <select name="language" class="animated-select">
+            <option value="python" {{ "selected" if language=="python" }}>Python</option>
+            <option value="javascript" {{ "selected" if language=="javascript" }}>JavaScript</option>
+            <option value="c" {{ "selected" if language=="c" }}>C</option>
+            <option value="java" {{ "selected" if language=="java" }}>Java</option>
+        </select>
+
+        <div class="mode-toggle">
+            <input type="hidden" name="mode" id="modeInput" value="explain">
+
+                <button type="button" class="mode-btn active" data-mode="explain">Explain</button>
+                <button type="button" class="mode-btn" data-mode="improve">Improve</button>
+                <button type="button" class="mode-btn" data-mode="optimize">Optimize</button>
+                <button type="button" class="mode-btn" data-mode="security">Security</button>
+
+            <span class="slider"></span>
+        </div>
+
+        <select name="model" class="animated-select">
+            <option value="qwen">Qwen (Fast)</option>
+            <option value="llama">Llama-2 (Flexible)</option>
+            <option value="mistral">Mistral (Smart)</option>
+            <option value="falcon">Falcon (Strong)</option>
+        </select>
+
+        <button type="button" class="clear-btn" onclick="clearForm()" title="Clear form"><span>↻</span> Reset</button>
+        <button type="button" class="help-btn" onclick="showShortcuts()" title="Keyboard shortcuts"><span>?</span> Help</button>
+        <button type="submit" class="analyze-btn">Analyze Code</button>
+    </div>
+
+    <textarea name="code" id="codeInput" placeholder="Paste your code here... (Press Ctrl+Enter to analyze)" required>{{ code }}</textarea>
+    
+    <div class="char-counter">
+        <span id="charCount">0 characters</span>
+    </div>
+
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">🔍 Analyzing your code...</div>
+    </div>
+
+</form>
+</div>
+
+{% if result %}
+<div class="output">
+    <div class="output-header">
+        <h2>🧠Feedback</h2>
+        <button class="copy-btn" onclick="copyOutput(this)">Copy</button>
+    </div>
+
+    <span class="difficulty {{ difficulty|lower }}">
+        {{ difficulty }}
+    </span>
+
+    <div class="ai-output" id="ai-output">
+        {{ result | safe }}
+    </div>
+</div>
+{% endif %}
+
+</div>
+
+<!-- Keyboard Shortcuts Modal -->
+<div id="shortcutsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <span>⌨️ Keyboard Shortcuts</span>
+            <button class="close-btn" onclick="closeShortcuts()">&times;</button>
+        </div>
+        <div class="shortcut-item">
+            <span>Submit Code</span>
+            <span class="shortcut-key">Ctrl+Enter</span>
+        </div>
+        <div class="shortcut-item">
+            <span>Toggle Theme</span>
+            <span class="shortcut-key">Click 🌙/☀️</span>
+        </div>
+        <div class="shortcut-item">
+            <span>Clear Form</span>
+            <span class="shortcut-key">Click 🗑️</span>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// Handle form submission to prevent resubmission alert on refresh
+function handleFormSubmit(event) {
+    event.preventDefault();
+    showLoading();
+    
+    const form = event.target;
+    
+    setTimeout(() => {
+        history.replaceState(null, '', window.location.pathname);
+    }, 100);
+    
+    form.submit();
+}
+
+// Clear form function
+function clearForm() {
+    const form = document.querySelector('form');
+    const codeInput = document.getElementById('codeInput');
+    
+    if (form && codeInput) {
+        form.reset();
+        codeInput.value = '';
+        
+        const output = document.querySelector('.output');
+        if (output) {
+            output.remove();
+        }
+        
+        const loading = document.getElementById('loading');
+        if (loading) {
+            loading.classList.remove('active');
+            loading.style.display = 'none';
+            const spinner = loading.querySelector('.spinner');
+            if (spinner) spinner.classList.remove('active');
+        }
+        
+        codeInput.focus();
+        codeInput.dispatchEvent(new Event('input'));
+        
+        history.replaceState(null, '', window.location.pathname);
+        
+        showToast('Form reset', 'info');
+    }
+}
+
+// Show shortcuts modal
+function showShortcuts() {
+    const modal = document.getElementById('shortcutsModal');
+    modal.classList.add('active');
+}
+
+// Close shortcuts modal
+function closeShortcuts() {
+    const modal = document.getElementById('shortcutsModal');
+    modal.classList.remove('active');
+}
+
+// Close modal on outside click
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('shortcutsModal');
+    if (event.target === modal) {
+        closeShortcuts();
+    }
+});
+
+// Theme Toggle Function
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    const themeToggle = document.getElementById('themeToggle');
+    
+    if (savedTheme === 'light') {
+        document.body.classList.add('light-mode');
+        themeToggle.textContent = '☀️';
+    } else {
+        document.body.classList.remove('light-mode');
+        themeToggle.textContent = '🌙';
+    }
+}
+
+function toggleTheme() {
+    const body = document.body;
+    const themeToggle = document.getElementById('themeToggle');
+    
+    if (body.classList.contains('light-mode')) {
+        body.classList.remove('light-mode');
+        localStorage.setItem('theme', 'dark');
+        themeToggle.textContent = '🌙';
+        showToast('Dark mode enabled', 'info');
+    } else {
+        body.classList.add('light-mode');
+        localStorage.setItem('theme', 'light');
+        themeToggle.textContent = '☀️';
+        showToast('Light mode enabled', 'info');
+    }
+}
+
+// Toast Notification Function
+function showToast(message, type = 'success', duration = 4000) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    
+    let icon = '✓';
+    if (type === 'error') icon = '✕';
+    if (type === 'info') icon = 'ℹ';
+    
+    toast.innerHTML = `<strong>${icon} ${message}</strong>`;
+    
+    container.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.add('remove');
+        setTimeout(() => toast.remove(), 300);
+    }, duration);
+}
+
+function showLoading() {
+    const el = document.getElementById("loading");
+    el.style.display = "block";
+    el.classList.add("active");
+    const spinner = el.querySelector('.spinner');
+    spinner.classList.add('active');
+}
+
+function copyOutput(btn) {
+    const output = document.getElementById("ai-output");
+    if (!output) return;
+
+    const text = output.innerText;
+
+    navigator.clipboard.writeText(text).then(() => {
+        btn.innerText = "Copied ✓";
+        btn.style.background = "#16a34a";
+
+        setTimeout(() => {
+            btn.innerText = "Copy";
+            btn.style.background = "#2563eb";
+        }, 1800);
+    });
+}
+
+function copyCodeBlock(btn) {
+    const codeBlock = btn.nextElementSibling;
+    const code = codeBlock.textContent;
+    
+    navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = 'Copied ✓';
+        btn.style.opacity = '0.9';
+        
+        setTimeout(() => {
+            btn.textContent = 'Copy';
+            btn.style.opacity = '1';
+        }, 1500);
+    });
+}
+
+function addCopyButtonsToCodeBlocks() {
+    const codeBlocks = document.querySelectorAll('pre');
+    codeBlocks.forEach(pre => {
+        if (!pre.previousElementSibling || !pre.previousElementSibling.classList.contains('code-copy-btn')) {
+            const btn = document.createElement('button');
+            btn.className = 'code-copy-btn';
+            btn.textContent = 'Copy';
+            btn.type = 'button';
+            btn.onclick = (e) => {
+                e.preventDefault();
+                copyCodeBlock(btn);
+            };
+            pre.parentNode.insertBefore(btn, pre);
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const buttons = document.querySelectorAll(".mode-btn");
+    const slider = document.querySelector(".mode-toggle .slider");
+    const input = document.getElementById("modeInput");
+
+    buttons.forEach((btn, index) => {
+        btn.addEventListener("click", () => {
+            buttons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            slider.style.transform = `translateX(${index * 100}%)`;
+            input.value = btn.dataset.mode;
+        });
+    });
+
+    // Add animation to dropdowns
+    const selects = document.querySelectorAll(".animated-select");
+    selects.forEach(select => {
+        select.addEventListener("change", function() {
+            this.style.transform = "scale(0.98)";
+            setTimeout(() => {
+                this.style.transform = "scale(1)";
+            }, 100);
+        });
+    });
+
+    // Character Counter
+    const codeInput = document.getElementById('codeInput');
+    const charCount = document.getElementById('charCount');
+    const charCounter = charCount.parentElement;
+    
+    if (codeInput) {
+        codeInput.addEventListener('input', function() {
+            const count = this.value.length;
+            charCount.textContent = count + ' character' + (count !== 1 ? 's' : '');
+            
+            // Warning at 5000 characters
+            if (count > 5000) {
+                charCounter.classList.add('warning');
+            } else {
+                charCounter.classList.remove('warning');
+            }
+        });
+        
+        // Initialize counter
+        codeInput.dispatchEvent(new Event('input'));
+    }
+
+    // Keyboard Shortcut: Ctrl+Enter to submit
+    if (codeInput) {
+        codeInput.addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                e.preventDefault();
+                const form = this.closest('form');
+                if (form && this.value.trim()) {
+                    showToast('Analyzing your code...', 'info');
+                    form.submit();
+                } else if (!this.value.trim()) {
+                    showToast('Please enter some code first', 'error');
+                }
+            }
+        });
+    }
+
+    // Syntax Highlighting for output code blocks
+    document.querySelectorAll('pre code').forEach(el => {
+        hljs.highlightElement(el);
+    });
+
+    // Initialize theme
+    initTheme();
+    
+    // Theme toggle button
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    // Add copy buttons to code blocks in output
+    addCopyButtonsToCodeBlocks();
+
+});
+
+// Prevent form resubmission alert on page refresh
+window.addEventListener('beforeunload', function() {
+    const form = document.querySelector('form');
+    if (form && form.method === 'POST') {
+        history.replaceState(null, '', window.location.href);
+    }
+});
+
+</script>
+
+</body>
+</html>
